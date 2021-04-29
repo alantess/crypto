@@ -18,7 +18,7 @@
 - `loss_limit`: float. default=*0.7* 
   - Stops when portfolio losses X amount of the available_cash. 
 - `min_max`: bool. default=*True* 
-  - If true use a MinMaxScaler else Standard Scaler for normalization. 
+  - If true use a **min max scaler** else **standard scaler** for normalization. 
 - `SEED`: int. default=*1337*  
   - Sets random seed.
 
