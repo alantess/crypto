@@ -17,6 +17,9 @@ class cryptoEnv(object):
         loss_limit: Stops when wallets losses X amount of money 
             --> Start with $1000, stop when there is less than $700 total
                 set loss_limit to 0.7
+        n_actions: Sets the number of buy and sell actions
+        loss_limit: Sets done flag when agent loses X amount of money.
+        SEED: numpy random seed
     Shape (State):
         Prices are scaled.
         [Open, High, Low, Close, Cypto Wallet, USD_Wallet]

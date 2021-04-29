@@ -19,7 +19,7 @@
 
 
 # Requirements
-- All you need is a CSV with only open, high , low and close prices.
+- CSV with only open, high , low and close prices.
 
 # Implementation
 ```python
