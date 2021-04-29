@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
-import requests
 from gym import spaces
 import matplotlib.pyplot as plt
 
@@ -10,7 +9,6 @@ import matplotlib.pyplot as plt
 class cryptoEnv(object):
     r"""A trading currency env that works in similar fashion to OpenAI gym
     Sends a state at time (t) at every step (minute/hour/day/week)
-    Able to train the agent online / offline
         ---> CSV must be set in latest-oldest prices
     Args:
         dataset: CSV dataset with OHLC (Open, High, Low, Close) prices
@@ -49,13 +47,13 @@ class cryptoEnv(object):
         self.OHLC_shape = None
         self.scaled_stock_prices = None
         self.n_steps = None
-        self.online = False
         self.action_set = np.arange(-n_actions, n_actions)
         self.action_space = spaces.Discrete(len(self.action_set))
         self.obs_space = None
-        self.usd_history, self.crypto_history, self.price_history = [], [], []
+        self.portfolio, self.price_history = [], []
         self.scaled_prices = None
         self.OHLC_unscaled = self._load()
+        self.episode = 0
 
     def _load(self):
         df = pd.read_csv(self.dataset)
@@ -71,8 +69,19 @@ class cryptoEnv(object):
     def save_records(self):
         if not os.path.exists('history'):
             os.mkdir('history')
+        plt.title("Price History")
+        plt.xlabel("Time Steps")
+        plt.ylabel("Price $(USD)")
+        plt.plot(self.portfolio, label='Portfolio Total Balance')
+        plt.plot(self.price_history, label='price')
+        plt.legend()
+        plt.savefig(f'history/episode_{self.episode}')
+        plt.show()
+        plt.clf()
+        self.episode += 1
 
     def reset(self):
+        self.portfolio, self.price_history = [], []
         self.time_step = 0
         self.crypto_wallet = 0
         self.usd_wallet = self.available_cash
@@ -82,8 +91,7 @@ class cryptoEnv(object):
 
     def step(self, a):
         assert (0 <= a <= len(self.action_set)), "Invalid Action"
-        self.crypto_history.append(self.crypto_wallet)
-        self.usd_history.append(self.usd_wallet)
+        self.portfolio.append(self.usd_wallet + self.crypto_wallet)
         self.price_history.append(self.price)
         reward = 0.0
         prev_holding = self._get_holdings()
@@ -98,7 +106,7 @@ class cryptoEnv(object):
             done = True
         else:
             reward += 1
-            done = (self.time_step == self.n_steps)
+            done = (self.time_step == self.n_steps - 5)
 
         INFO = {"HOLDINGS": cur_holdings, "PROFIT": profit}
 
@@ -133,11 +141,16 @@ class cryptoEnv(object):
             return
 
     def _buy_or_sell(self, amount, purchase):
+        amount = abs(amount)
         if purchase:
+            if self.usd_wallet <= 0:
+                return
             if self.usd_wallet >= amount:
                 self.usd_wallet -= amount
                 self.crypto_wallet += amount
         else:
+            if self.crypto_wallet <= 0:
+                return
             if self.crypto_wallet >= amount:
                 self.crypto_wallet -= amount
                 self.usd_wallet += amount
@@ -148,6 +161,3 @@ class cryptoEnv(object):
     def _update_wallets(self):
         self.crypto_wallet *= (self.OHLC_unscaled[self.time_step + 1][3] /
                                self.price)
-
-    def _get_online_prices(self):
-        pass
