@@ -6,15 +6,16 @@
 
 # Parameters
 - `dataset`: str.  
-Location of the CSV dataset
+  - Location of the CSV dataset
 - `available_cash`: int.  
-Starting amount of money that can be used to be traded for a cryptocurrency
+  - Starting amount of money that can be used to be traded for a cryptocurrency
 - `n_action`: int. default *10* 
-Number of available action. I.E. 10 action means 10 selling and 10 buying options.
+  - Number of available action. 
+  - I.E. 10 action means 10 selling and 10 buying options.
 - `loss_limit`: float. default *0.7* 
-Stops when portfolio losses X amount of the available_cash. 
+  - Stops when portfolio losses X amount of the available_cash. 
 - `SEED`: int. default *1337*  
-Sets random seed.
+  - Sets random seed.
 
 
 # Requirements
