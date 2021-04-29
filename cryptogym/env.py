@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from gym import spaces
 import matplotlib.pyplot as plt
 
@@ -19,6 +19,7 @@ class cryptoEnv(object):
                 set loss_limit to 0.7
         n_actions: Sets the number of buy and sell actions
         loss_limit: Sets done flag when agent loses X amount of money.
+        min_max: Sets preprocessing to between [0,1] else it will use standard scaler
         SEED: numpy random seed
     Shape (State):
         Prices are scaled.
@@ -36,10 +37,14 @@ class cryptoEnv(object):
                  available_cash,
                  n_actions=10,
                  loss_limit=0.7,
+                 min_max=True,
                  SEED=1337):
         np.random.seed(SEED)
         self.loss_limit = loss_limit
-        self.scaler = StandardScaler()
+        if min_max:
+            self.scaler = MinMaxScaler()
+        else:
+            self.scaler = StandardScaler()
         self.dataset = dataset
         self.price: float = None
         self.available_cash = available_cash

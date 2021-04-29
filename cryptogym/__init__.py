@@ -1,1 +1,1 @@
-from env import cryptoEnv
+from cryptogym.env import cryptoEnv

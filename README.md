@@ -1,9 +1,12 @@
 # Crypto
 - A crypto currency trading environment.
-- Very similar to [OpenAI](https://gym.openai.com/)
+- Based on [OpenAI Gym](https://gym.openai.com/)
+
 
 # Install
-
+```sh
+ pip install cryptogym
+  ```
 # Parameters
 - `dataset`: str.  
   - Location of the CSV dataset
@@ -14,6 +17,8 @@
   - I.E. 10 action means 10 selling and 10 buying options.
 - `loss_limit`: float. default=*0.7* 
   - Stops when portfolio losses X amount of the available_cash. 
+- `min_max`: bool. default=*True* 
+  - If true use a MinMaxScaler else Standard Scaler for normalization. 
 - `SEED`: int. default=*1337*  
   - Sets random seed.
 
@@ -23,7 +28,8 @@
 
 # Implementation
 ```python
-env = cryptoEnv("xxx_dataset.csv",100)
+from cryptogym.env import cryptoEnv
+env = cryptoEnv("BTC_dataset.csv",100)
 for i in range(10):
   s = env.reset()
   done = False
@@ -37,5 +43,10 @@ for i in range(10):
   ```python
   env.save_records()
   ```
+
+<sub><sup>MIT LICENSE</sup></sub>
+  
+
+  
 
 

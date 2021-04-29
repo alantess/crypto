@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="cryptogym",
-    version='0.0.1',
+    version='0.0.13',
     license="MIT",
     description="CryptoCurrency Trading environment",
     author="Alan Tessier",
