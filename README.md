@@ -12,6 +12,8 @@
   - Location of the CSV dataset
 - `available_cash`: int.  
   - Starting amount of money that can be used to be traded for a cryptocurrency
+-- `purchase_size`: float. default=*1* 
+  - Percentage of how much of that cryptocurrency can be purchsaed  
 - `n_action`: int. default=*10* 
   - Number of available action. 
   - I.E. 10 action means 10 selling and 10 buying options.

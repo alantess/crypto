@@ -13,7 +13,11 @@ class cryptoEnv(object):
     Args:
         dataset: CSV dataset with OHLC (Open, High, Low, Close) prices
         available_cash: Amount of money that can be used to trade
+        purchase_size: Percentage of the crypto currency that can be purchased
+            --> [0,1] range 
         n_actions: Number of availabe actions
+            --> I.E. if n_actions = 10:
+                [0-9] sell ,[10] hold,[11-20] buy actions, == 20 total actions
         loss_limit: Stops when wallets losses X amount of money 
             --> Start with $1000, stop when there is less than $700 total
                 set loss_limit to 0.7
@@ -35,6 +39,7 @@ class cryptoEnv(object):
     def __init__(self,
                  dataset,
                  available_cash,
+                 purchase_size=1,
                  n_actions=10,
                  loss_limit=0.7,
                  min_max=True,
@@ -47,6 +52,7 @@ class cryptoEnv(object):
             self.scaler = StandardScaler()
         self.dataset = dataset
         self.price: float = None
+        self.purchase_size = purchase_size
         self.available_cash = available_cash
         self.usd_wallet: float = None
         self.crypto_wallet: float = None
@@ -137,7 +143,7 @@ class cryptoEnv(object):
 
     def _trade(self, a):
         a -= 10
-        a *= self.price
+        a *= (self.price * self.purchase_size)
         if a < 0:
             self._buy_or_sell(a, purchase=False)
         elif a > 0:
